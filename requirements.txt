@@ -1,0 +1,4 @@
+django
+djangorestframework
+django-jazzmin
+django-bootstrap-v5
