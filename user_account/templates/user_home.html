@@ -1,4 +1,5 @@
 {% extends "main.html" %}
+{% load static %}
 
 {% block title %}Home - LibManage{% endblock %}
 
@@ -16,6 +17,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="">Borrow History</a>
             </li>
+            {% if user.is_librarian %}
+            <li class="nav-item">
+                <a class="nav-link" href="">Book Requests</a>
+            </li>
+            {% endif %}
             <li class="nav-item">
                 <a class="nav-link" href="">Profile</a>
             </li>
@@ -34,13 +40,20 @@
         <h2 class="text-center mb-4">Trending</h2>
         <div class="row">
             {% for book in trending_books %}
-            <div class="col-md-3">
+            <div class="col-md-3 my-2">
                 <div class="card">
-                    <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}">
+                    {% if book.cover_image %}
+                    <img src="../../media/{{ book.cover_image }}" class="card-img-top" alt="{{ book.title }}" width="200px" height="200px">
+                    {% else %}
+                    <img src="{% static 'assets/book_cover_sample.jpg' %}" class="card-img-top" alt="{{ book.title }}" width="200px" height="200px">
+                    {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ book.title }}</h5>
                         <p class="card-text">by {{ book.author }}</p>
-                        <a href="{% url 'book-detail' book.id %}" class="btn btn-primary btn-block">View Details</a>
+                        <div class="d-flex justify-content-between">
+                            <a href="" class="btn btn-primary btn-sm">View Details</a>
+                            <a href="" class="btn btn-success btn-sm">Borrow</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,17 +62,24 @@
     </div>
 
     <!-- Books Section -->
-    <div class="books-section">
+    <div class="books-section h-100">
         <h2 class="text-center mb-4">Books</h2>
-        <div class="row">
+        <div class="row" id="books-div">
             {% for book in all_books %}
-            <div class="col-md-3">
+            <div class="col-md-3 my-2">
                 <div class="card">
-                    <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}">
+                    {% if book.cover_image %}
+                    <img src="../../media/{{ book.cover_image }}" class="card-img-top" alt="{{ book.title }}" width="200px" height="200px">
+                    {% else %}
+                    <img src="{% static 'assets/book_cover_sample.jpg' %}" class="card-img-top" alt="{{ book.title }}" width="200px" height="200px">
+                    {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ book.title }}</h5>
                         <p class="card-text">by {{ book.author }}</p>
-                        <a href="{% url 'book-detail' book.id %}" class="btn btn-primary btn-block">View Details</a>
+                        <div class="d-flex justify-content-between">
+                            <a href="" class="btn btn-primary btn-sm">View Details</a>
+                            <a href="" class="btn btn-success btn-sm">Borrow</a>
+                        </div>
                     </div>
                 </div>
             </div>

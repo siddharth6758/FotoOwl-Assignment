@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from user_account.models import CustomUser
 from books.models import Books
 from django.contrib import messages
+from django.db.models import Count
 
 # Create your views here.
 def home(request):
@@ -71,5 +72,12 @@ def logout_user(req):
 
 @login_required(login_url='/login/')
 def user_homepage(req):
-    context = {}
+    trending_books = Books.objects.annotate(
+        borrowed_books = Count('librarymanagement')
+    ).order_by('-borrowed_books')[:4]
+    all_books = Books.objects.values('title','cover_image','author')
+    context = {
+        'trending_books': trending_books,
+        'all_books': all_books
+    }
     return render(req,'user_home.html',context=context)
