@@ -1,0 +1,16 @@
+.error{
+    background-color: rgb(255, 87, 87);
+    padding:3px;
+}
+.info{
+    background-color: rgb(84, 156, 238);
+    padding:3px;
+}
+.success{
+    background-color: rgb(66, 173, 98);
+    padding:3px;
+}
+.warning{
+    background-color: rgb(238, 184, 84);
+    padding:3px;
+}

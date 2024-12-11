@@ -1,0 +1,70 @@
+{% extends "main.html" %}
+
+{% block title %}Home - LibManage{% endblock %}
+
+{% block header %}
+<div class="container">
+    <a class="navbar-brand" href="{% url 'user-homepage-url' %}">LibManage</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'user-homepage-url' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="">Borrow History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout-url' %}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Trending Section -->
+    <div class="trending-section mb-5">
+        <h2 class="text-center mb-4">Trending</h2>
+        <div class="row">
+            {% for book in trending_books %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">by {{ book.author }}</p>
+                        <a href="{% url 'book-detail' book.id %}" class="btn btn-primary btn-block">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Books Section -->
+    <div class="books-section">
+        <h2 class="text-center mb-4">Books</h2>
+        <div class="row">
+            {% for book in all_books %}
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="{{ book.image_url }}" class="card-img-top" alt="{{ book.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">by {{ book.author }}</p>
+                        <a href="{% url 'book-detail' book.id %}" class="btn btn-primary btn-block">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
