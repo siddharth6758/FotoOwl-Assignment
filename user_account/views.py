@@ -75,7 +75,7 @@ def user_homepage(req):
     trending_books = Books.objects.annotate(
         borrowed_books = Count('librarymanagement')
     ).order_by('-borrowed_books')[:4]
-    all_books = Books.objects.values('title','cover_image','author')
+    all_books = Books.objects.values('id','title','cover_image','author')
     context = {
         'trending_books': trending_books,
         'all_books': all_books

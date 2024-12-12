@@ -1,0 +1,77 @@
+{% extends "user_home.html" %}
+{% load static %}
+
+{% block title %}Book Detail - {{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-4">
+                    {% if book.cover_image %}
+                    <img src="../../media/{{ book.cover_image }}" alt="{{ book.title }}" class="img-fluid rounded" width="300px" height="500px">
+                    {% else %}
+                    <img src="{% static 'assets/book_cover_sample.jpg' %}" alt="{{ book.title }}" class="img-fluid rounded" width="300px" height="500px">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <h1>{{ book.title }}</h1>
+                    <h5 class="text-muted">by {{ book.author }}</h5>
+                    <p><strong>Description:</strong></p>
+                    <p>{{ book.description }}</p>
+                    <p><strong>Availability:</strong> 
+                        {% if book_available %}
+                            <span class="text-success">Available</span>
+                        {% else %}
+                            <span class="text-danger">Not Available</span>
+                        {% endif %}
+                    </p>
+
+                    {% if book_available %}
+                    <button class="btn btn-success">Borrow Book</button>
+                    {% else %}
+                    <button class="btn btn-secondary" disabled>Borrow Book</button>
+                    {% endif %}
+                    
+                    {% if user.is_librarian %}
+                    <button class="btn btn-primary" id="update-book-btn">Update Book</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if user.is_librarian %}
+        <div class="col-md-4" id="update-book-form" style="margin-top: -30px; display:none;">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Update Book</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'update-book' book.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="title">Title:</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ book.title }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="author">Author</label>
+                            <input type="text" class="form-control" id="author" name="author" value="{{ book.author }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required>{{ book.description }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="cover_image">Cover Image</label>
+                            <input type="file" class="form-control-file" id="cover_image" name="cover_image">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Book</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
