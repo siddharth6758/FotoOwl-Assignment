@@ -37,6 +37,11 @@
                     {% if user.is_librarian %}
                     <button class="btn btn-primary" id="update-book-btn">Update Book</button>
                     {% endif %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div {% if message.tags %} class="{{message.tags}} my-3 container" {% endif %}>{{message}}</div>
+                        {% endfor %} 
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -48,7 +53,7 @@
                     <h5 class="mb-0">Update Book</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{% url 'update-book' book.id %}" method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" action="{% url 'update-book' book.id %}">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="title">Title:</label>

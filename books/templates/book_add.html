@@ -1,0 +1,34 @@
+{% extends "user_home.html" %}
+
+{% block title %}Add New Book{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Add New Book</h2>
+    <form method="POST" enctype="multipart/form-data" action="{% url 'add-book' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="author">Author</label>
+            <input type="text" class="form-control" id="author" name="author" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="cover_image">Cover Image</label>
+            <input type="file" class="form-control-file" id="cover_image" name="cover_image">
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Book</button>
+    </form>
+</div>
+{% endblock %}
