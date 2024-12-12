@@ -7,5 +7,5 @@ urlpatterns = [
     path('add-books',add_books,name='add-book-page'),
     path('book-add',BookView.as_view(http_method_names=['post']),name='add-book'),
     path('book-update/<int:id>',BookUpdateView.as_view(http_method_names=['post']),name='update-book'),
-    path('book-delete/<int:id>',BookView.as_view(),name='delete-book')
+    path('book-delete/<int:id>',BookUpdateView.as_view(http_method_names=['get']),name='delete-book')
 ]

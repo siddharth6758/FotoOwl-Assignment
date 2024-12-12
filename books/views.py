@@ -44,6 +44,16 @@ class BookView(View):
 
 class BookUpdateView(View):
 
+    def get(self, request, id):
+        try:
+            book = Books.objects.get(id=id)
+            book.delete()
+            messages.success(request,f'Successfully Deleted!')
+        except Exception as e:
+            print(f'Exception occured during Deleting Book | error: {str(e)}')
+            messages.error(request,f'Error while deleting: {str(e)}!')
+        return redirect('manage-book')
+
     def post(self, request, id):
         title = request.POST.get('title')
         author = request.POST.get('author')
