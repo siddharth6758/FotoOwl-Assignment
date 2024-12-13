@@ -4,6 +4,7 @@ from books.models import Books
 from library.models import LibraryManagement
 from django.utils.timezone import now
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 class BookView(View):
 
@@ -12,7 +13,9 @@ class BookView(View):
         if LibraryManagement.objects.filter(
             book_borrowed__id=book_obj.id,
             borrow_on__lte=now(),
-            borrow_till__gte=now()
+            borrow_till__gte=now(),
+            is_approved=True,
+            request_status='completed'
         ).exists():
             book_available = False
         else:
@@ -75,6 +78,7 @@ class BookUpdateView(View):
         return redirect(f'/book-details/{id}')
 
 
+@login_required(login_url='/login/')
 def manage_books(request):
     books = Books.objects.all()
     context = {
@@ -83,5 +87,6 @@ def manage_books(request):
     return render(request,'book_manage.html',context=context)
 
 
+@login_required(login_url='/login/')
 def add_books(request):
     return render(request,'book_add.html')

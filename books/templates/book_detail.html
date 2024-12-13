@@ -29,7 +29,7 @@
                     </p>
 
                     {% if book_available %}
-                    <button class="btn btn-success">Borrow Book</button>
+                    <a href="{% url 'library-book-borrow-add' book.id %}" class="btn btn-success">Borrow Book</a>
                     {% else %}
                     <button class="btn btn-secondary" disabled>Borrow Book</button>
                     {% endif %}

@@ -19,3 +19,31 @@ $("#profile-edit-btn").on("click", function () {
 $("#profile-cancel-btn").on("click", function () {
     location.reload();
 });
+
+$('#export-borrow-history-btn').on('click',function(){
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/ajax/download-history-csv', true);
+    xhr.responseType = 'blob';
+
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            const blob = new Blob([xhr.response], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'borrow_history.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        } else {
+            alert('Error exporting borrow history. Please try again.');
+        }
+    };
+
+    xhr.onerror = function() {
+        alert('Error exporting borrow history. Please try again.');
+    };
+
+    xhr.send();
+})

@@ -1,0 +1,54 @@
+{% extends "user_home.html" %}
+{% load static %}
+
+{% block title %}Borrow Request{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Borrow Request</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div {% if message.tags %} class="{{message.tags}} my-3 container" {% endif %}>{{message}}</div>
+        {% endfor %} 
+    {% endif %}
+    <div class="table-responsive text-center">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Book</th>
+                    <th>Requested By</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Approve/Disapprove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book_request in borrow_requests %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {% if book_request.book_borrowed.cover_image %}
+                            <img src="../../media/{{ book_request.book_borrowed.cover_image }}" alt="{{ book_request.book_borrowed.title }}" class="rounded" width="30" height="30">
+                            {% else %}
+                            <img src="{% static 'assets/book_cover_sample.jpg' %}" alt="{{ book_request.book_borrowed.title }}" class="rounded" width="30" height="30">
+                            {% endif %}
+                            <span class="ml-2">
+                                <strong>{{ book_request.book_borrowed.title }}</strong><br>
+                                <small class="text-muted">{{ book_request.book_borrowed.author }}</small>
+                            </span>
+                        </div>
+                    </td>
+                    <td>{{ book_request.borrow_by }}</td>
+                    <td>{{ book_request.borrow_on }}</td>
+                    <td>{{ book_request.borrow_till }}</td>
+                    <td>
+                        <a href="{% url 'approve-disapprove' 'approve' book_request.id %}" class="btn btn-sm btn-primary">Approve</a>
+                        <a href="{% url 'approve-disapprove' 'disapprove' book_request.id %}" class="btn btn-sm btn-danger">Disapprove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

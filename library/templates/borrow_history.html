@@ -1,0 +1,57 @@
+{% extends "user_home.html" %}
+{% load static %}
+
+{% block title %}Borrow History{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between">
+        <h2 class="mb-4">Borrow History</h2>
+        <button class="btn btn-sm btn-primary" style="height:35px" id="export-borrow-history-btn">Download history</button>
+    </div>
+    <div class="table-responsive text-center">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Book</th>
+                    <th>Requested By</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Approved By</th>
+                    <th>Is Approved</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in borrow_history %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {% if history.book_borrowed.cover_image %}
+                            <img src="../../media/{{ history.book_borrowed.cover_image }}" alt="{{ history.book_borrowed.title }}" class="rounded" width="30" height="30">
+                            {% else %}
+                            <img src="{% static 'assets/book_cover_sample.jpg' %}" alt="{{ history.book_borrowed.title }}" class="rounded" width="30" height="30">
+                            {% endif %}
+                            <span class="ml-2">
+                                <strong>{{ history.book_borrowed.title }}</strong><br>
+                                <small class="text-muted">{{ history.book_borrowed.author }}</small>
+                            </span>
+                        </div>
+                    </td>
+                    <td>{{ history.borrow_by }}</td>
+                    <td>{{ history.borrow_on }}</td>
+                    <td>{{ history.borrow_till }}</td>
+                    <td>{{ history.decision_by }}</td>
+                    <td>
+                        {% if history.is_approved %}
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background-color: green; display: inline-block;"></div>
+                        {% else %}
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background-color: red; display: inline-block;"></div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
