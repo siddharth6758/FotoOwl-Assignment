@@ -10,45 +10,45 @@ from django.db.models import Count
 def home(request):
     return render(request,'main.html')
 
-def login_page(req):
-    if req.method == 'POST':
-        email = req.POST.get('email')
-        password = req.POST.get('password')
+def login_page(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
         
         if not CustomUser.objects.filter(email=email).exists():
-            messages.error(req,f'User with email: {email} does not exists!')
+            messages.error(request,f'User with email: {email} does not exists!')
             return redirect('login-url')
         elif email=='admin@gmail.com' and password=='admin':
-            user = authenticate(req,email=email,password=password)
+            user = authenticate(request,email=email,password=password)
             if user is None:
-                messages.error(req,'Wrong password!')
+                messages.error(request,'Wrong password!')
             else:
-                login(req,user)
+                login(request,user)
                 return redirect('/admin')
         else:
-            user = authenticate(req,email=email,password=password)
+            user = authenticate(request,email=email,password=password)
             if user is None:
-                messages.error(req,'Wrong password!')
+                messages.error(request,'Wrong password!')
             else:
-                login(req,user)
+                login(request,user)
                 return redirect('user-homepage-url')
-    return render(req,'login_page.html')
+    return render(request,'login_page.html')
 
-def signup_page(req):
-    if req.method == 'POST':
-        username = req.POST.get('username')
-        email = req.POST.get('email_id')
-        firstname = req.POST.get('first_name')
-        lastname = req.POST.get('last_name')
-        phone = req.POST.get('mobile_number')
-        password = req.POST.get('password')
-        confirm_password = req.POST.get('confirm_password')
+def signup_page(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email_id')
+        firstname = request.POST.get('first_name')
+        lastname = request.POST.get('last_name')
+        phone = request.POST.get('mobile_number')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
 
         if confirm_password != password:
-            messages.info(req,f'Password does not match!')
+            messages.info(request,f'Password does not match!')
             return redirect('signup-url')
         if CustomUser.objects.filter(email=email).exists():
-            messages.info(req,f'Email {email} already exists!')
+            messages.info(request,f'Email {email} already exists!')
             return redirect('signup-url')
         else:
             user = CustomUser.objects.create_user(
@@ -60,18 +60,18 @@ def signup_page(req):
                 password = password
             )
             user.save()
-            user = authenticate(req,email=email,password=password)
-            login(req,user)
+            user = authenticate(request,email=email,password=password)
+            login(request,user)
             return redirect('user-homepage-url')
-    return render(req,'signup_page.html')
+    return render(request,'signup_page.html')
 
 @login_required(login_url='/login/')
-def logout_user(req):
-    logout(req)
+def logout_user(request):
+    logout(request)
     return redirect('home')
 
 @login_required(login_url='/login/')
-def user_homepage(req):
+def user_homepage(request):
     trending_books = Books.objects.annotate(
         borrowed_books = Count('librarymanagement')
     ).order_by('-borrowed_books')[:4]
@@ -80,4 +80,44 @@ def user_homepage(req):
         'trending_books': trending_books,
         'all_books': all_books
     }
-    return render(req,'user_home.html',context=context)
+    return render(request,'user_home.html',context=context)
+
+@login_required(login_url='/login/')
+def user_update(request):
+    if request.method == 'POST':
+        try:
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            phone = request.POST.get('phone')
+
+            user = request.user
+            if first_name and first_name != '':
+                user.first_name = first_name
+            else:
+                messages.warning(request,'First Name cannot be empty!')
+            if last_name and last_name != '':
+                user.last_name = last_name
+            else:
+                messages.warning(request,'Last Name cannot be empty!')
+            if username and username != '':
+                user.username = username
+            else:
+                messages.warning(request,'Username cannot be empty!')
+            if email and email != '':
+                user.email = email
+            else:
+                messages.warning(request,'Email cannot be empty!')
+            if phone and phone != '':
+                user.phone = phone
+            else:
+                messages.warning(request,'Mobile Number cannot be empty!')
+            user.save()
+            messages.success(request,f'Profile successfully updated!')
+            return redirect('user-update-url')
+        except Exception as e:
+            messages.error(request,f'Error {str(e)} while updating profile!')
+            return redirect('user-update-url')
+    else:
+        return render(request, 'user_profile.html')
